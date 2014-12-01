@@ -1,0 +1,29 @@
+﻿@model WJOArvioitava.Models.OstoskoriPartialModel
+@{
+    decimal summa = 0;
+    decimal lkm = 0;
+    foreach (var ostos in Model.Ostoskori.Ostokset)
+    {
+        summa  += ostos.Maara * ostos.YksikkoHinta;
+        lkm += ostos.Maara;
+    }
+}
+
+@if (Model.Ostoskori.Ostokset.Count > 0 && Model.Ostoskori.Tila != 2)
+{
+    <div>
+        @if(Model.NaytaOtsikko == true)
+        {
+            <h3>Keskeneräinen ostoskori</h3>
+        }
+        <h3>@Html.ActionLink("Ostoskori", "Index", "Ostoskori")</h3>
+
+        <p>Ostokset yhteensä: @summa.ToString("#.#0") &euro;</p>
+        <p>Korissa tuotteita: @((int)lkm)</p>
+    </div>
+}
+else
+{
+    <p>Sinulla ei ole tällä hetkellä keskeneräistä ostoskoria.</p>
+}
+

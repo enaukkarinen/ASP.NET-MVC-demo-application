@@ -1,0 +1,38 @@
+﻿@model IEnumerable<WJOArvioitava.Models.Tuote>
+
+@{
+    ViewBag.Title = "Tuotteet";
+}
+
+<h2>Tuotteet</h2>
+
+<div>
+        @using (Ajax.BeginForm("Etsi",       // Action
+                        "Tuote",    // Controller
+                         new AjaxOptions
+                         {   // Hakuun käytettävä HTTP-komento
+                             HttpMethod = "GET",
+                             // Palautettavan arvon lisäystapa
+                             InsertionMode = InsertionMode.Replace,
+                             // Kutsussa palautettavan arvon vastaanottokohta
+                             // (= <table>-tagi, jonka id = etsinnanTulos)
+                             UpdateTargetId = "etsinnanTulos",
+
+                         }))
+    {
+        <div class="row">
+            <input name="q" type="text" />
+            <input type="submit" value="Etsi" />
+        </div>
+        <br />
+    }
+    <div class="row">
+        <div class="col-md-8">
+            <table id="etsinnanTulos" class="table table-striped"></table>
+        </div>   
+        <div id="targetId" class="pull-right col-md-4">
+            @Html.Action("HaeOstosKoriPartial", "Ostoskori", null)
+        </div>
+    </div>
+    
+</div>

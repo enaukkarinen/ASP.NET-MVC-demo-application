@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "Asiakas";
+}
+
+<h2>Asiakastiedot</h2>
+
+@if (Request.IsAuthenticated)
+{
+    @Html.Action("Tiedot")
+}
+else
+{
+    <p>@Html.ActionLink("Kirjaudu ensin sisään", "Sisaan", "Kayttaja") ja palaa sen jälkeen takaisin.</p>
+    <p>Jos et ole vielä asiakkaana, tästä voit @Html.ActionLink("rekisteröityä", "Rekisteroi", "Kayttaja").</p>
+}
+

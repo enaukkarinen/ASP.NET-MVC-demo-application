@@ -1,0 +1,98 @@
+﻿@model WJOArvioitava.Models.Asiakas
+
+@{
+    ViewBag.Title = "Muuta";
+}
+
+<h2>@ViewBag.Otsikko</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Asiakas</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nimi, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.Nimi)
+                @Html.ValidationMessageFor(model => model.Nimi)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Sahkoposti, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Sahkoposti)
+                @Html.ValidationMessageFor(model => model.Sahkoposti)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Katuosoite, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Katuosoite)
+                @Html.ValidationMessageFor(model => model.Katuosoite)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Postinro, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Postinro)
+                @Html.ValidationMessageFor(model => model.Postinro)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KaupunkiString, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.KaupunkiString, new { @class = "autocomplete" })
+                @Html.ValidationMessageFor(model => model.KaupunkiString)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AlennusProsentti, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AlennusProsentti)
+                @Html.ValidationMessageFor(model => model.AlennusProsentti)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Maksukortti, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Maksukortti)
+                @Html.ValidationMessageFor(model => model.Maksukortti)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Talleta" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    <script type="text/javascript" language="javascript">
+
+        $(document).ready(function () {
+            $('#KaupunkiString').autocomplete({
+                source: '@Url.Action("Etsi")', messages: { noResults: "", results: function (ui) { ui.item.label} }
+            });
+        })
+
+        function runSearch() {
+
+            return true;
+        }
+    </script>
+}

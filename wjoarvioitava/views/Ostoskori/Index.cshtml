@@ -1,0 +1,62 @@
+﻿@model WJOArvioitava.Models.Ostoskori
+
+@using WJOArvioitava.Models;
+@{
+    ViewBag.Title = "Ostoskori";
+    decimal summa = 0;
+    foreach (var item in Model.Ostokset)
+    {
+        summa += item.YksikkoHinta * item.Maara;
+    }
+}
+
+<h2>Ostoskori</h2>
+
+@if (Model.Ostokset.Count > 0 && Model.Tila != 2)
+{
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ViimeksiMuokattu)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ViimeksiMuokattu)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tila)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OstoskoriTila.Nimi)
+        </dd>
+    </dl>
+    
+    <table class="table table-striped">
+        <tr>
+            <th class="bold">Tuote</th>
+            <th class="bold">Määrä</th>
+            <th class="bold">Yksikköhinta</th>
+            <th class="bold">Yhteensä</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Ostokset) 
+        {
+           <tr>
+                <td>@item.Tuote.Nimi (id: @item.TuoteId)</td>
+                <td>@((int)item.Maara)</td>
+                <td>@item.YksikkoHinta &euro;</td>
+                <td>@((item.Maara * @item.YksikkoHinta).ToString("#.#0")) &euro;</td>
+                <td>
+                    @Html.ActionLink("Muokkaa", "Muuta", new { id = item.Ostoskori.Id, tuoteid = item.TuoteId }) |
+                    @Html.ActionLink("Poista", "Poista", new { id = item.Ostoskori.Id, tuoteid = item.TuoteId })
+                </td>
+            </tr>
+        }
+    </table>
+    <h3>Ostokset yhteensä: @summa.ToString("#.##") &euro;</h3>
+    <button type="button" class="btn btn-primary" id="tilaaBtn" onclick="location.href='@Url.Action("Tilaa", "Ostoskori", new { id = Model.Id })'">Tee ostoskorista tilaus</button>
+}
+else
+{
+    <p>Ei keskeneräistä ostoskoria.</p>
+}

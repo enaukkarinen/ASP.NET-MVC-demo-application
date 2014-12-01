@@ -1,0 +1,17 @@
+﻿@model WJOArvioitava.Models.Asiakas
+
+@{
+    decimal summa = 0;
+    foreach (var o in Model.Ostoskorit)
+    {
+        if (o.Tila != 1)
+        {
+            foreach (var x in o.Ostokset)
+            {
+                summa += x.Maara * x.YksikkoHinta;
+            }
+            <dd>@o.TilausPvm.Value.ToString("dd.MM.yyyy") / @summa.ToString("#.#0") &euro;</dd>
+            summa = 0;
+        }
+    }
+}

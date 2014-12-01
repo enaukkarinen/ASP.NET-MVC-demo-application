@@ -1,0 +1,28 @@
+﻿@model WJOArvioitava.Models.Ostoskori
+
+@using WJOArvioitava.Models
+
+@{
+    ViewBag.Title = "Leipomopuoti";
+}
+
+<h2>Tervetuloa Leipomopuodin kauppaan</h2>
+
+
+
+@if (Request.IsAuthenticated)
+{   
+    <p>@ViewBag.Nimi</p>
+    
+    @Html.Action("HaeOstosKoriPartial", "Ostoskori", new { otsikko = true })
+}
+else
+{
+    <p>@Html.ActionLink("Kirjaudu Sisään.", "Sisaan", "Kayttaja")</p>
+    <p>Jos et ole vielä asiakkaana, tästä voit @Html.ActionLink("rekisteröityä", "Rekisteroi", "Kayttaja")</p>
+}
+
+
+
+
+

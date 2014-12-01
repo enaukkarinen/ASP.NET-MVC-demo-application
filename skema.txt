@@ -1,0 +1,86 @@
+-- (c) Hans Nieminen, 2013.
+-- CREATE SCHEMA -lause
+
+CREATE SCHEMA [L]
+
+-- CREATE TABLE -lauseet
+
+CREATE TABLE [L].[Asiakas](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Nimi] [nvarchar](256) NOT NULL,
+	[Sahkoposti] [nvarchar](200) NULL,
+	[Katuosoite] [nvarchar](200) NULL,
+	[Postinro] [char](5) NULL,
+	[Kaupunki] [int] NULL,
+	[AlennusProsentti] [decimal](5, 2) NULL,
+	[Maksukortti] [nvarchar](200) NULL,
+ CONSTRAINT [PK_Asiakas] PRIMARY KEY ([Id])
+
+CREATE TABLE [L].[Kaupunki](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Nimi] [nvarchar](200) NOT NULL,
+ CONSTRAINT [PK_Kaupunki] PRIMARY KEY ([Id])
+
+CREATE TABLE [L].[Maksutapa](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Nimi] [varchar](200) NOT NULL,
+ CONSTRAINT [PK_Maksutapa] PRIMARY KEY ([Id])
+
+CREATE TABLE [L].[Ostos](
+	[Id] [int] NOT NULL,
+	[TuoteId] [int] NOT NULL,
+	[Maara] [decimal](9, 2) NOT NULL DEFAULT (1),
+	[YksikkoHinta] [decimal](7, 2) NOT NULL,
+	[AlennusProsentti] [decimal](5, 2) NULL DEFAULT (0),
+ CONSTRAINT [PK_Ostos] PRIMARY KEY ([Id],[TuoteId])
+
+CREATE TABLE [L].[Ostoskori](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ViimeksiMuokattu] [datetime] NOT NULL DEFAULT (getdate()),
+	[TilausPvm] [datetime] NULL,
+	[Tilaaja] [int] NOT NULL,
+	[Tila] [int] NOT NULL DEFAULT (1),
+	[Maksutapa] [int] NOT NULL DEFAULT (1),
+ CONSTRAINT [PK_Ostoskori] PRIMARY KEY ([Id])
+
+CREATE TABLE [L].[OstoskoriTila](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Nimi] [varchar](200) NOT NULL,
+ CONSTRAINT [PK_OstoskoriTila] PRIMARY KEY ([Id])
+
+CREATE TABLE [L].[Tuote](
+	[Id] [int] NOT NULL,
+	[Nimi] [nvarchar](200) NOT NULL,
+	[Selitys] [nvarchar](500) NULL,
+	[Hinta] [decimal](7, 2) NOT NULL,
+	[VeroId] [int] NULL,
+ CONSTRAINT [PK_Tuote] PRIMARY KEY ([Id])
+
+CREATE TABLE [L].[Verokanta](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Nimi] [varchar](200) NOT NULL,
+	[Veroprosentti] [decimal](5, 2) NOT NULL,
+ CONSTRAINT [PK_Verokanta] PRIMARY KEY ([Id])
+
+-- ALTER TABLE -lauseet
+
+ALTER TABLE [L].[Asiakas] 
+ADD  CONSTRAINT [FK_Asiakas_Kaupunki] FOREIGN KEY([Kaupunki]) REFERENCES [L].[Kaupunki] ([Id])
+
+ALTER TABLE [L].[Ostos]  
+ADD  CONSTRAINT [FK_Ostos_Id] FOREIGN KEY([Id]) REFERENCES [L].[Ostoskori] ([Id])
+
+ALTER TABLE [L].[Ostos] 
+ADD  CONSTRAINT [FK_Ostos_TuoteId] FOREIGN KEY([TuoteId]) REFERENCES [L].[Tuote] ([Id])
+
+ALTER TABLE [L].[Ostoskori]  
+ADD  CONSTRAINT [FK_Ostoskori_Maksutapa] FOREIGN KEY([Tila]) REFERENCES [L].[Maksutapa] ([Id])
+
+ALTER TABLE [L].[Ostoskori]  
+ADD  CONSTRAINT [FK_Ostoskori_Tila] FOREIGN KEY([Tila]) REFERENCES [L].[OstoskoriTila] ([Id])
+
+ALTER TABLE [L].[Ostoskori]
+ADD  CONSTRAINT [FK_Ostoskori_Tilaaja] FOREIGN KEY([Tilaaja]) REFERENCES [L].[Asiakas] ([Id])
+
+ALTER TABLE [L].[Tuote]  
+ADD  CONSTRAINT [FK_Tuote_Verokanta] FOREIGN KEY([VeroId]) REFERENCES [L].[Verokanta] ([Id])

@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNet.Identity
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("Ulos", "Kayttaja", FormMethod.Post, new
+    {
+        id = "logoutForm",
+        @class = "navbar-right"
+    }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                @Html.ActionLink("Hei " + User.Identity.GetUserName() + "!", "Muuta",
+"Kayttaja", routeValues: null, htmlAttributes: new { title = "Muuta" })
+            </li>
+            <li>
+                <a href="javascript:document.getElementById('logoutForm').submit()">
+                    Kirjaudu
+                    ulos
+                </a>
+            </li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            @Html.ActionLink("Rekisteröidy", "Rekisteroi", "Kayttaja", routeValues: null,
+htmlAttributes: new { id = "registerLink" })
+        </li>
+        <li>
+            @Html.ActionLink("Kirjaudu sisään", "Sisaan", "Kayttaja", routeValues: null,
+htmlAttributes: new { id = "loginLink" })
+        </li>
+    </ul>
+} 

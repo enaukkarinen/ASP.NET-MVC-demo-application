@@ -1,0 +1,53 @@
+﻿@model IEnumerable<WJOArvioitava.Models.Tuote>
+
+<table id="etsinnanTulos" class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nimi)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Selitys)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Hinta)
+        </th>
+        <th>
+            Alv-osuus
+        </th>
+        @if(Request.IsAuthenticated)
+        {
+            <th></th>           
+        }
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nimi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Selitys)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hinta)
+            </td>
+            <td>
+                @((item.Hinta * item.Verokanta.Veroprosentti * (decimal)0.01).ToString("0.#0")) &euro;
+            </td>
+            @if (Request.IsAuthenticated)
+            {
+            <td>@Ajax.ActionLink("Lisää koriin", "Lisaa", "Ostoskori", new { id = item.Id }, new AjaxOptions
+                  {
+                      UpdateTargetId = "targetId",
+                      InsertionMode = InsertionMode.Replace, // Palautettavan arvon lisäystapa
+                      HttpMethod = "GET" // Hakuun käytettävä HTTP-komento
+                  })
+            </td>
+            }
+        </tr>
+    }
+</table>
+
+
+

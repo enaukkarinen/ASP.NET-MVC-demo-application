@@ -1,0 +1,84 @@
+﻿@model WJOArvioitava.Models.Ostoskori
+
+@{
+    ViewBag.Title = "Tilaa";
+    
+    decimal ostoskoriSumma = 0;
+    decimal[] taulu = new decimal[Model.Ostokset.Count];
+
+    int counter = 0;
+
+    foreach (var ostos in Model.Ostokset)
+    {
+        taulu[counter] = ostos.YksikkoHinta * ostos.Maara;
+
+        ostoskoriSumma += taulu[counter];
+        counter++;
+    }
+    counter = 0;
+}
+
+<h2>Tilaa</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Ostoskori (id: @Model.Id)</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.Tilaaja)
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Viimeksi muokattu / Tilaus Päivä</span>
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.ViimeksiMuokattu) / @DateTime.Now.ToString("dd.MM.yyyy")
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Tilaaja</span>
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.Asiakas.Nimi) <br /> @Html.DisplayFor(model => model.Asiakas.Katuosoite), @Html.DisplayFor(model => model.Asiakas.Postinro) @Html.DisplayFor(model => model.Asiakas.Kaupunki.Nimi)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Maksutapa</span>
+            <div class="col-md-10">
+                @Html.DropDownList("MaksutapaString", new SelectList(ViewBag.Maksutavat))
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Tuotteet</span>
+            <div class="col-md-10">
+                @foreach (var ostos in Model.Ostokset)
+                {
+                    @ostos.Tuote.Nimi <text> </text> @ostos.Maara <text> * </text> @ostos.YksikkoHinta <text> &euro; = </text> @taulu[counter].ToString("#.#0")  <text> &euro;</text><br />
+                    counter++;
+                }
+                Yhteensä: <b>@ostoskoriSumma.ToString("#.#0") &euro;</b>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Tilaa" class="btn btn-default" />
+            </div>
+        </div>
+
+
+
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Takaisin", "Index")
+</div>
+
+
+
+
