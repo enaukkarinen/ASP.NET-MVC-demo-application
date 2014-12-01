@@ -1,4 +1,3 @@
-MVC_Demo
+Webstore demo built with .NET MVC 5
 ========
 
-A bakery webstore done in MVC 5
